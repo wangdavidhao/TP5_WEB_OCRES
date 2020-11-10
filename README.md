@@ -1,3 +1,6 @@
+# API DOCUMENTATION (GENERATED WITH POSTMAN)
+https://documenter.getpostman.com/view/6443204/TVejiqnW
+
 # TP5 : API
 
 A lire impérativement avant de commencer quoi que ce soit, ce sont les règles que vous devrez appliquer tout au long du semestre:
@@ -61,8 +64,7 @@ Utilisez express-generator pour initier votre tp
 ​
 2. Tester votre clé: http://www.omdbapi.com/?t=inception&apikey=VOTRECLEAPI
 
-# API DOCUMENTATION (GENERATED WITH POSTMAN)
-https://documenter.getpostman.com/view/6443204/TVejiqnW
+
 
 
 **Remplir la base de donnée avec des données supplémentaires**
