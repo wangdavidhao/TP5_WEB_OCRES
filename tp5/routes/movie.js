@@ -4,11 +4,12 @@ var router = express.Router();
 const axios = require('axios');
 const { response } = require('express');
 
+//API Constants
 const API_KEY = 'f907bc08';
 const API_URL = 'http://www.omdbapi.com/';
 
 
-//Array d'objet movies => mini bdd
+//Database with initial value
 movies = [
      {
         id: 'tt4154796',
@@ -32,8 +33,9 @@ const getMovieById = async (id) => {
         }
     });
 
-    const data = await response.data;
+    const data = await response.data; //Get the data
 
+    //Create a movie object with the data fetched => convert all string
     const movie = {
         id: id,
         movie: data.Title,
@@ -43,16 +45,12 @@ const getMovieById = async (id) => {
         poster: data.Poster,
         boxOffice: data.BoxOffice,
         rottenTomatoesScore: parseInt(data.Ratings[1].Value)
-
     }
-
-
     return movie;
 }
 
 //Function that return a movie by its name
 const getMovieByName = async (name) => {
-
 
     const response = await axios.get(API_URL, {
         params:{
@@ -81,8 +79,8 @@ const getMovieByName = async (name) => {
 //GET MOVIE BY ID
 router.get('/:id', async (req, res) => {
 
-    const {id} = req.params;
-    const result = await getMovieById(id);
+    const {id} = req.params; //Id from params
+    const result = await getMovieById(id); //Find Movie by its ID
 
     res.status(200).json(result);
     
@@ -90,17 +88,16 @@ router.get('/:id', async (req, res) => {
 
 //GET ALL MOVIES
 router.get('/', (req, res) => {
-
     res.status(200).json({movies});
 });
 
 //POST
 router.post('/', async (req, res) => {
 
-    const {movie} = req.body;
+    const {movie} = req.body; //Movie name from body
     const result = await getMovieByName(movie);
     
-    movies.push(result);
+    movies.push(result); //We push in the array of movies
     res.status(200).json({
         msg:"Succesfully added !",
         movies:movies
@@ -113,7 +110,7 @@ router.put('/:id', (req, res) => {
     const {id} = req.params;
     const {movie} = req.body;
     //const movieToUpdate = movies.find(movie => movie.id === parseInt(id)); //string to int
-    const movieToUpdate = movies.find(movie => movie.id === id); //string to int
+    const movieToUpdate = movies.find(movie => movie.id === id); 
     movieToUpdate.movie = movie; //Update the name
 
     res.status(200).json({
@@ -128,7 +125,7 @@ router.delete('/:id', (req, res) => {
     const {id} = req.params;
     //const movieToRemove = movies.find(movie => movie.id !== parseInt(id));
     const movieToRemove = movies.find(movie => movie.id !== id);
-    movies = movieToRemove;
+    movies = movieToRemove; //We replace the initial array of movies with new array excluding the removes one
     res.status(200).json({
         msg:`Remove the ${id} user`,
         movie:movies
