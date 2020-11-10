@@ -61,6 +61,10 @@ Utilisez express-generator pour initier votre tp
 ​
 2. Tester votre clé: http://www.omdbapi.com/?t=inception&apikey=VOTRECLEAPI
 
+# API DOCUMENTATION (GENERATED WITH POSTMAN)
+https://documenter.getpostman.com/view/6443204/TVejiqnW
+
+
 **Remplir la base de donnée avec des données supplémentaires**
 
 Dans cette étape vous aurez à appeler l'API omdb pour retrouver les informations d'un film grâce à son nom. 
