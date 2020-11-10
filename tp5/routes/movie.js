@@ -43,6 +43,7 @@ const getMovieById = async (id) => {
         poster: data.Poster,
         boxOffice: data.BoxOffice,
         rottenTomatoesScore: parseInt(data.Ratings[1].Value)
+
     }
 
 
@@ -51,6 +52,7 @@ const getMovieById = async (id) => {
 
 //Function that return a movie by its name
 const getMovieByName = async (name) => {
+
 
     const response = await axios.get(API_URL, {
         params:{
@@ -70,6 +72,7 @@ const getMovieByName = async (name) => {
         poster: data.Poster,
         boxOffice: data.BoxOffice,
         rottenTomatoesScore: parseInt(data.Ratings[1].Value)
+
     }
 
     return movie;
