@@ -26,54 +26,77 @@ movies = [
 //Function that return a movie object according to an id as a an argument
 const getMovieById = async (id) => {
 
-    const response = await axios.get(API_URL, {
+    try{
+        const response = await axios.get(API_URL, {
         params:{
             apikey:API_KEY,
             i:id
         }
-    });
+        });
 
-    const data = await response.data; //Get the data
+        const data = await response.data; //Get the data
 
-    //Create a movie object with the data fetched => convert all string
-    const movie = {
-        id: id,
-        movie: data.Title,
-        yearOfRelease: parseInt(data.Year),
-        duration: parseInt(data.Runtime),
-        actors: data.Actors.split(','),
-        poster: data.Poster,
-        boxOffice: data.BoxOffice,
-        rottenTomatoesScore: parseInt(data.Ratings[1].Value)
-    }
-    return movie;
+        //Create a movie object with the data fetched => convert all string
+        const movie = {
+            id: id,
+            movie: data.Title,
+            yearOfRelease: parseInt(data.Year),
+            duration: parseInt(data.Runtime),
+            actors: data.Actors.split(','),
+            poster: data.Poster,
+            boxOffice: data.BoxOffice,
+            rottenTomatoesScore: parseInt(data.Ratings[1].Value)
+        }
+        return movie;
+    }catch(error){
+        if(error.response){
+            console.log('Erreur fetching ' + error.response.status);
+        }else if(error.request){
+            console.log('Erreur fetching  ' + error.request);
+        }else{
+            console.log('Erreur fetching  ' + error.message);
+        }
+    }     
 }
 
 //Function that return a movie by its name
 const getMovieByName = async (name) => {
 
-    const response = await axios.get(API_URL, {
-        params:{
-            apikey:API_KEY,
-            t:name
+    try{
+        const response = await axios.get(API_URL, {
+            params:{
+                apikey:API_KEY,
+                t:name
+            }
+        });
+
+        const data = await response.data;
+
+        const movie = {
+            id: data.imdbID,
+            movie: data.Title,
+            yearOfRelease: parseInt(data.Year),
+            duration: parseInt(data.Runtime),
+            actors: data.Actors.split(','),
+            poster: data.Poster,
+            boxOffice: data.BoxOffice,
+            rottenTomatoesScore: parseInt(data.Ratings[1].Value)
+
         }
-    });
 
-    const data = await response.data;
+        return movie;
 
-    const movie = {
-        id: data.imdbID,
-        movie: data.Title,
-        yearOfRelease: parseInt(data.Year),
-        duration: parseInt(data.Runtime),
-        actors: data.Actors.split(','),
-        poster: data.Poster,
-        boxOffice: data.BoxOffice,
-        rottenTomatoesScore: parseInt(data.Ratings[1].Value)
+    }catch(error){
+        if(error.response){
+            console.log('Erreur fetching ' + error.response.status);
+        }else if(error.request){
+            console.log('Erreur fetching  ' + error.request);
+        }else{
+            console.log('Erreur fetching  ' + error.message);
+        }
+    }     
 
-    }
-
-    return movie;
+    
 }
 
 //GET MOVIE BY ID
@@ -82,13 +105,22 @@ router.get('/:id', async (req, res) => {
     const {id} = req.params; //Id from params
     const result = await getMovieById(id); //Find Movie by its ID
 
-    res.status(200).json(result);
+    if(result){
+        res.status(200).json(result);
+    }else{
+        res.status(400).json('Erreur id introuvable');
+    }
     
 });
 
 //GET ALL MOVIES
 router.get('/', (req, res) => {
-    res.status(200).json({movies});
+    if({movies}){
+        res.status(200).json({movies});
+    }else{
+        res.status(400).json('Erreur');
+    }
+    
 });
 
 //POST
@@ -105,18 +137,26 @@ router.post('/', async (req, res) => {
 
 });
 
+
+
 //PUT
 router.put('/:id', (req, res) => {
     const {id} = req.params;
     const {movie} = req.body;
     //const movieToUpdate = movies.find(movie => movie.id === parseInt(id)); //string to int
     const movieToUpdate = movies.find(movie => movie.id === id); 
-    movieToUpdate.movie = movie; //Update the name
 
-    res.status(200).json({
-        msg:`Update the ${id} user`,
-        movies:movies
-    })
+    if(movieToUpdate){
+        movieToUpdate.movie = movie; //Update the name
+
+        res.status(200).json({
+            msg:`Update the ${id} movie`,
+            movies:movies
+        })
+    }else{
+        res.status(400).json('Erreur put id introuvable');
+    }
+    
 });
 
 //DELETE
@@ -125,11 +165,17 @@ router.delete('/:id', (req, res) => {
     const {id} = req.params;
     //const movieToRemove = movies.find(movie => movie.id !== parseInt(id));
     const movieToRemove = movies.find(movie => movie.id !== id);
-    movies = movieToRemove; //We replace the initial array of movies with new array excluding the removes one
-    res.status(200).json({
-        msg:`Remove the ${id} user`,
-        movie:movies
-    });
+
+    if(!movieToRemove){
+        movies = movieToRemove; //We replace the initial array of movies with new array excluding the removes one
+        res.status(200).json({
+            msg:`Remove the ${id} movie`,
+            movie:movies
+        });
+    }else{
+        res.status(400).json('Erreur id introuvable');
+    }
+    
 });
 
 module.exports = router;
